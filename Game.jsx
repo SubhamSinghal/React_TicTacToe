@@ -23,8 +23,6 @@ class Game extends React.Component{
         }
 
         squares[i] = this.state.xIsNext ? 'X' : 'O';
-
-        const xIsNext = !this.state.xIsNext;
        
         this.setState({
             history: history.concat([{
@@ -36,6 +34,20 @@ class Game extends React.Component{
 
         console.log("Clicked");
         
+    }
+
+    isDrawMatch(square){
+
+        for(let i = 0; i < square.length; i++){
+           // if(square[i] != "X" || square[i] != "O")
+           if(!square[i]){
+               return false;
+           }
+                
+        }
+
+        return true;
+
     }
 
     calculateWinner(square){
@@ -72,9 +84,7 @@ class Game extends React.Component{
     render(){
 
         const history = this.state.history;
-        const current = history[this.state.stepNumber];
-        const winner = this.calculateWinner(current.squares);
-
+       
         const moves = history.map((step, move) => {
                 const desc = move ?
                 "Go to move #" + move :
@@ -88,13 +98,21 @@ class Game extends React.Component{
                 );
         });
 
+        const current = history[this.state.stepNumber];
+        const winner = this.calculateWinner(current.squares);
+
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
         } else {
-            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-        }   
 
+            if(this.isDrawMatch(current.squares)){
+                status = "Match is Draw";
+            } else{
+                status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            }
+            
+        }   
         return (
 
             <div className="game">
